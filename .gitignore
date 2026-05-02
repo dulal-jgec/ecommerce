@@ -31,3 +31,29 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Build
+target/
+*.class
+
+# Logs
+logs/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Env files
+.env
+
+# Application config (IMPORTANT)
+application.properties
+application.yml
+
+# Maven wrapper (optional keep)
+!.mvn/wrapper/maven-wrapper.jar
