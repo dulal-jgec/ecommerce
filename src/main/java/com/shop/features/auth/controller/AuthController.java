@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.shop.common.dto.ApiResponse;
+import com.shop.features.auth.dto.AuthResponseDto;
 import com.shop.features.auth.dto.LoginRequestDto;
+import com.shop.features.auth.dto.RefreshTokenRequestDto;
 import com.shop.features.auth.dto.RegisterRequestDto;
+import com.shop.features.auth.entity.RefreshToken;
 import com.shop.features.auth.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -43,14 +46,69 @@ public class AuthController {
 	        @Valid @RequestBody LoginRequestDto request
 	) {
 
-	    String token = authService.login(request);
+	    AuthResponseDto response = authService.login(request);
 
 	    return ResponseEntity.ok(
 	            ApiResponse.builder()
 	                    .success(true)
 	                    .message("Login successful")
-	                    .data(token)
+	                    .data(response)
 	                    .build()
 	    );
 	}
+	
+	@PostMapping("/refresh")
+	public ResponseEntity<ApiResponse<?>> refreshToken(
+			@Valid @RequestBody RefreshTokenRequestDto request
+			){
+		 
+		AuthResponseDto response = authService.refreshToken(request.getRefreshToken());
+		
+		return ResponseEntity.ok(
+				ApiResponse.builder()
+				.success(true)
+				.message("Token refreshment")
+				.data(response)
+				.build()
+				);
+	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<ApiResponse<?>> logout(
+	        @Valid @RequestBody RefreshTokenRequestDto request
+	) {
+
+	    authService.logout(request.getRefreshToken());
+
+	    return ResponseEntity.ok(
+	            ApiResponse.builder()
+	                    .success(true)
+	                    .message("Logged out successfully")
+	                    .data(null)
+	                    .build()
+	    );
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
