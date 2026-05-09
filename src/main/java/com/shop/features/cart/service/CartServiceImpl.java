@@ -1,0 +1,101 @@
+package com.shop.features.cart.service;
+
+import com.shop.common.exception.BadRequestException;
+import com.shop.common.exception.ResourceNotFoundException;
+import com.shop.features.cart.dto.AddToCartRequestDto;
+import com.shop.features.cart.dto.CartResponseDto;
+import com.shop.features.cart.entity.Cart;
+import com.shop.features.cart.entity.CartItem;
+import com.shop.features.cart.mapper.CartMapper;
+import com.shop.features.cart.repository.CartItemRepository;
+import com.shop.features.cart.repository.CartRepository;
+import com.shop.features.product.entity.Product;
+import com.shop.features.product.repository.ProductRepository;
+import com.shop.features.user.entity.User;
+import com.shop.features.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class CartServiceImpl implements CartService {
+
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+
+    @Override
+    public CartResponseDto addToCart(String email, AddToCartRequestDto request) {
+
+        //find user
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        //find product
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        //stock validation
+        if (product.getStock() < request.getQuantity()) {
+            throw new BadRequestException("Insufficient stock");
+        }
+
+        //find/create cart findByuserId
+        Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    return cartRepository.save(newCart);
+                });
+
+        //check existing cart item
+        CartItem existingItem = cart.getItems()
+                .stream()
+                .filter(item ->
+                        item.getProduct().getId().equals(product.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existingItem != null) {
+
+            // update quantity
+            existingItem.setQuantity(
+                    existingItem.getQuantity() + request.getQuantity()
+            );
+
+            cartItemRepository.save(existingItem);
+
+        } else {
+
+            //create new cart item
+            CartItem item = new CartItem();
+
+            item.setCart(cart);
+            item.setProduct(product);
+            item.setQuantity(request.getQuantity());
+
+            //price snapshot
+            item.setPrice(product.getPrice());
+
+            cart.getItems().add(item);
+
+            cartItemRepository.save(item);
+        }
+
+        return CartMapper.toResponse(cart);
+    }
+
+    @Override
+    public CartResponseDto getCart(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+
+        return CartMapper.toResponse(cart);
+    }
+}
