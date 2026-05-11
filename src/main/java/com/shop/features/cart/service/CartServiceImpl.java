@@ -4,6 +4,7 @@ import com.shop.common.exception.BadRequestException;
 import com.shop.common.exception.ResourceNotFoundException;
 import com.shop.features.cart.dto.AddToCartRequestDto;
 import com.shop.features.cart.dto.CartResponseDto;
+import com.shop.features.cart.dto.UpdateCartItemDto;
 import com.shop.features.cart.entity.Cart;
 import com.shop.features.cart.entity.CartItem;
 import com.shop.features.cart.mapper.CartMapper;
@@ -98,4 +99,74 @@ public class CartServiceImpl implements CartService {
 
         return CartMapper.toResponse(cart);
     }
+    
+    @Override
+    public CartResponseDto updateQuantity(
+    		 String email,
+    		 UpdateCartItemDto request
+    	) {
+    	
+    	User user = userRepository.findByEmail(email)
+    			.orElseThrow(()-> new ResourceNotFoundException("User not found"));
+    	
+    	Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+    	
+    	
+    	CartItem item = cart.getItems()
+    			.stream()
+    			.filter(i ->i.getId().equals(request.getCartItemId()))
+    			.findFirst()
+    			.orElseThrow(()-> new ResourceNotFoundException("cart item not found"));
+    		
+    	// stock check 
+    	
+    	if(item.getProduct().getStock()<request.getQuantity()) {
+    		throw new BadRequestException("Insufficient stock");
+    	}
+    	
+    	item.setQuantity(request.getQuantity());
+    	
+    	cartItemRepository.save(item);
+    	return CartMapper.toResponse(cart); 
+    	
+    }
+    
+    
+    @Override
+    public void removeItem(String email, Long cartItemId) {
+    	
+    	User user = userRepository.findByEmail(email)
+    			.orElseThrow(()-> new ResourceNotFoundException("Userr not found"));
+    	
+    	Cart cart = cartRepository.findByUserId(user.getId())
+    			.orElseThrow(()->new ResourceNotFoundException("Cart not found"));
+    	
+    	CartItem item = cart.getItems()
+    			.stream()
+    			.filter(i->i.getId().equals(cartItemId))
+    			.findFirst()
+    			.orElseThrow(()->new ResourceNotFoundException("Cart item not found"));
+    	
+    	
+    	cart.getItems().remove(item);
+    	cartRepository.save(cart);
+    }
+    
+    @Override
+    
+    public void clearCart(String email) {
+    	
+    	User user = userRepository.findByEmail(email)
+    			.orElseThrow(()->new ResourceNotFoundException("User not found"));
+    	
+    	Cart cart = cartRepository.findByUserId(user.getId())
+                 .orElseThrow(()->new ResourceNotFoundException("Cart not found"));
+    	
+	
+    	cart.getItems().clear();
+    	cartRepository.save(cart);
+    	
+    }
+     
 }
