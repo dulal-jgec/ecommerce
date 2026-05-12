@@ -16,6 +16,7 @@ import com.shop.features.user.entity.User;
 import com.shop.features.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
 		userRepository.save(user);
 	}
 	
+	@Transactional
 	@Override
 	public AuthResponseDto login(LoginRequestDto request) {
 
@@ -59,11 +61,16 @@ public class AuthServiceImpl implements AuthService {
 
 	    String accessToken = jwtService.generateToken(user.getEmail(), user.getRole());
 
- 
-	    //create refresh token
+	    // delete old refresh token
+	    refreshTokenRepository.deleteByUserId(user.getId());
+
+	    // create new refresh token
 	    RefreshToken refreshToken = new RefreshToken();
+
 	    refreshToken.setToken(java.util.UUID.randomUUID().toString());
+
 	    refreshToken.setUser(user);
+
 	    refreshToken.setExpiryDate(LocalDateTime.now().plusDays(7));
 
 	    refreshTokenRepository.save(refreshToken);
