@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.shop.features.order.entity.OrderStatus;
+
 @Getter
 @Builder
 public class OrderResponseDto {
@@ -17,7 +19,7 @@ public class OrderResponseDto {
 
     private BigDecimal totalPrice;
 
-    private String status;
+    private OrderStatus status;
 
     private LocalDateTime createdAt;
 }

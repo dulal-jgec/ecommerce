@@ -40,9 +40,9 @@ public class Order {
 
     //status
     
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
-
+    private OrderStatus status;
     // audit
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
