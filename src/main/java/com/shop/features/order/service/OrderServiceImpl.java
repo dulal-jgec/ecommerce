@@ -13,6 +13,7 @@ import com.shop.features.cart.entity.Cart;
 import com.shop.features.cart.entity.CartItem;
 import com.shop.features.cart.repository.CartRepository;
 import com.shop.features.order.dto.OrderResponseDto;
+import com.shop.features.order.dto.PlaceOrderRequestDto;
 import com.shop.features.order.dto.UpdateOrderStatusDto;
 import com.shop.features.order.entity.Order;
 import com.shop.features.order.entity.OrderItem;
@@ -25,6 +26,9 @@ import com.shop.features.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
+import com.shop.features.address.entity.Address;
+import com.shop.features.address.repository.AddressRepository;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,27 +39,74 @@ public class OrderServiceImpl implements OrderService {
 	private final UserRepository userRepository;
 	private final CartRepository cartRepository;
 	private final OrderRepository orderRepository;
-
+	private final AddressRepository addressRepository;
     
 	
-		@Override
-		@Transactional
-		public OrderResponseDto placeOrder(String email) {
-			User user = userRepository.findByEmail(email)
-					.orElseThrow(()->new ResourceNotFoundException("User not found"));
-			Cart cart = cartRepository.findByUserId(user.getId())
-					.orElseThrow(()->new ResourceNotFoundException("Cart not found"));
-			
-			 if (cart.getItems().isEmpty()) {
-		            throw new BadRequestException("Cart is empty");
-		        }
-			 
-			 // create order 
-			 
-			 Order order = new Order();
-			 order.setUser(user);
-			 order.setStatus(OrderStatus.PLACED);			
-			 BigDecimal total = BigDecimal.ZERO;
+	@Override
+	@Transactional
+	public OrderResponseDto placeOrder(
+	        String email,
+	        PlaceOrderRequestDto request
+	) {
+
+	    User user = userRepository.findByEmail(email)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("User not found"));
+	    
+	    Address address = addressRepository
+	            .findByIdAndUserId(
+	                    request.getAddressId(),
+	                    user.getId()
+	            )
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Address not found"));
+	    
+	    Cart cart = cartRepository.findByUserId(user.getId())
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Cart not found"));
+
+	    if (cart.getItems().isEmpty()) {
+	        throw new BadRequestException("Cart is empty");
+	    }
+
+	    Order order = new Order();
+	    order.setUser(user);
+	    order.setStatus(OrderStatus.PLACED);
+	    
+	    order.setShippingFullName(
+	            address.getFullName()
+	    );
+
+	    order.setShippingPhoneNumber(
+	            address.getPhoneNumber()
+	    );
+
+	    order.setShippingAddressLine1(
+	            address.getAddressLine1()
+	    );
+
+	    order.setShippingAddressLine2(
+	            address.getAddressLine2()
+	    );
+
+	    order.setShippingCity(
+	            address.getCity()
+	    );
+
+	    order.setShippingState(
+	            address.getState()
+	    );
+
+	    order.setShippingPostalCode(
+	            address.getPostalCode()
+	    );
+
+	    order.setShippingCountry(
+	            address.getCountry()
+	    );
+	    
+	    
+	    BigDecimal total = BigDecimal.ZERO;
 			 
 			 // cart-> order items
 			 

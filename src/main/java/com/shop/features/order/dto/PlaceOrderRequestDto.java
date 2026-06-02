@@ -1,5 +1,6 @@
 package com.shop.features.order.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class PlaceOrderRequestDto {
 
-    // future:
-    // addressId
-    // paymentMethod
+    @NotNull
+    private Long addressId;
 }

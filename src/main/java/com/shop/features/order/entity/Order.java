@@ -51,4 +51,28 @@ public class Order {
     public void onCreate() {
         createdAt = LocalDateTime.now();
     }
+    @Column(nullable = false)
+    private String shippingFullName;
+
+    @Column(nullable = false)
+    private String shippingPhoneNumber;
+
+    @Column(nullable = false)
+    private String shippingAddressLine1;
+    
+
+    @Column(nullable = false)
+    private String shippingAddressLine2;
+    
+    @Column(nullable = false)
+    private String shippingCity;
+
+    @Column(nullable = false)
+    private String shippingState;
+
+    @Column(nullable = false)
+    private String shippingPostalCode;
+
+    @Column(nullable = false)
+    private String shippingCountry;
 }

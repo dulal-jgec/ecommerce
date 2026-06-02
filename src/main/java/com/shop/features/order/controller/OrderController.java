@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shop.common.dto.ApiResponse;
+import com.shop.features.order.dto.PlaceOrderRequestDto;
 import com.shop.features.order.dto.UpdateOrderStatusDto;
 import com.shop.features.order.service.OrderService;
 
@@ -28,12 +29,16 @@ public class OrderController {
     
     @PostMapping
     public ResponseEntity<ApiResponse<?>> placeOrder(
-            Authentication authentication
+            Authentication authentication,
+            @Valid @RequestBody PlaceOrderRequestDto request
     ) {
 
         String email = authentication.getName();
 
-        var response = orderService.placeOrder(email);
+        var response = orderService.placeOrder(
+                email,
+                request
+        );
 
         return ResponseEntity.ok(
                 ApiResponse.builder()
@@ -95,7 +100,7 @@ public class OrderController {
     							.build()
     				            );
     		}
-   
+     
 }
 
  
