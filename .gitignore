@@ -57,3 +57,5 @@ application.yml
 
 # Maven wrapper (optional keep)
 !.mvn/wrapper/maven-wrapper.jar
+
+src/main/resources/application-local.properties
