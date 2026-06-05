@@ -16,17 +16,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //unique email (login identity)
+    
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    //hashed password (never plain text)
+    //hashed password 
     @Column(nullable = false)
     private String password;
 
     //role for authorization
     @Column(nullable = false)
-    private String role; // USER / ADMIN
+    private String role; 
 
     //audit
     @Column(nullable = false, updatable = false)
