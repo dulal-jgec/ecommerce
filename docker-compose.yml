@@ -7,7 +7,7 @@ services:
     container_name: ecommerce-mysql
 
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ecommerce_shop
 
     ports:
