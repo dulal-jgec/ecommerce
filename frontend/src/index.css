@@ -1,0 +1,18 @@
+@import "tailwindcss";
+/* GLOBAL THEME COLORS */
+:root {
+  --primary-green: #134e4a;
+  --secondary-green: #065f46;
+  --accent-yellow: #facc15;
+  --light-bg: #f0fdf4; /* very light green */
+
+  /* ✅ ONLY ADDED THIS */
+  --dropdown-bg: linear-gradient(to bottom right, var(--light-bg), #ffffff);
+}
+
+/* APPLY GLOBAL BACKGROUND */
+body {
+  background-color: var(--light-bg);
+  color: #111827;
+  font-family: system-ui, sans-serif;
+}

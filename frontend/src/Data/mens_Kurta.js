@@ -1,0 +1,73 @@
+export const mens_kurta = [
+  {
+    id: 1,
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
+    title: "Classic White Kurta",
+    subtitle: "Pure cotton traditional wear",
+    price: 999,
+  },
+  {
+    id: 2,
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c",
+    title: "Black Pathani Kurta",
+    subtitle: "Stylish & bold look",
+    price: 1499,
+  },
+  {
+    id: 3,
+    image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990",
+    title: "Linen Kurta",
+    subtitle: "Light & breathable",
+    price: 1399,
+  },
+  {
+    id: 4,
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    title: "Festive Kurta",
+    subtitle: "Perfect for celebrations",
+    price: 1999,
+  },
+  {
+    id: 5,
+    image: "https://images.unsplash.com/photo-1617137968427-85924c800a22",
+    title: "Designer Kurta",
+    subtitle: "Premium modern style",
+    price: 2499,
+  },
+  {
+      id: 6,
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
+    title: "Classic White Kurta",
+    subtitle: "Pure cotton traditional wear",
+    price: 999,
+  },
+    
+  {
+    id: 7,
+    image: "https://images.unsplash.com/photo-1603252109303-2751441dd157",
+    title: "Silk Kurta",
+    subtitle: "Elegant festive outfit",
+    price: 2999,
+  },
+  {
+    id: 8,
+    image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb",
+    title: "Short Kurta",
+    subtitle: "Modern casual look",
+    price: 1199,
+  },
+   {
+    id: 9,
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c",
+    title: "Black Pathani Kurta",
+    subtitle: "Stylish & bold look",
+    price: 1499,
+  },
+  {
+    id: 10,
+    image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990",
+    title: "Linen Kurta",
+    subtitle: "Light & breathable",
+    price: 1399,
+  },
+];
